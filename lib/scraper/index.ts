@@ -26,7 +26,7 @@ export async function scrapeAmazonProduct(url: string) {
     port,
     rejectUnauthorized: false,
   }
-
+ 
   try {
     // Fetch the product page
     const response = await axios.get(url, options);
@@ -93,8 +93,10 @@ export async function scrapeAmazonProduct(url: string) {
       highestPrice: Number(original_price) || Number(currentPrice),
       averagePrice: Number(currentPrice) || Number(original_price),
     }
+    const info = $('#prodDetails.a-section').text().trim();
 
-    console.log("data", {data});
+    // console.log("data", {data});
+    // console.log("info", {info});
 
     return data;
   } catch (error: any) {
