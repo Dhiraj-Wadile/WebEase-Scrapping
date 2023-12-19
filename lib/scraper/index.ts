@@ -1,15 +1,13 @@
-
-
 // from github gist (above code is working fine)
 
-"use server"
+"use server";
 
-import axios from 'axios';
-import * as cheerio from 'cheerio';
-import { extractCurrency, extractDescription, extractPrice } from '../utils';
+import axios from "axios";
+import * as cheerio from "cheerio";
+import { extractCurrency, extractDescription, extractPrice } from "../utils";
 
 export async function scrapeAmazonProduct(url: string) {
-  if(!url) return;
+  if (!url) return;
 
   // BrightData proxy configuration
   const username = String(process.env.BRIGHT_DATA_USERNAME);
@@ -22,22 +20,22 @@ export async function scrapeAmazonProduct(url: string) {
       username: `${username}-session-${session_id}`,
       password,
     },
-    host: 'brd.superproxy.io',
+    host: "brd.superproxy.io",
     port,
     rejectUnauthorized: false,
-  }
- 
+  };
+
   try {
     // Fetch the product page
     const response = await axios.get(url, options);
     const $ = cheerio.load(response.data);
 
     // Extract the product title
-    const title = $('#productTitle').text().trim();
+    const title = $("#productTitle").text().trim();
     const currentPrice = extractPrice(
-      $('.priceToPay span.a-price-whole'),
-      $('.a.size.base.a-color-price'),
-      $('.a-button-selected .a-color-base'),
+      $(".priceToPay span.a-price-whole"),
+      $(".a.size.base.a-color-price"),
+      $(".a-button-selected .a-color-base")
     );
 
     // const originalPrice = extractPrice(
@@ -47,7 +45,7 @@ export async function scrapeAmazonProduct(url: string) {
     //   $('#priceblock_dealprice'),
     //   $('.a-size-base.a-color-price')
     // );
-        const original_price = extractPrice(
+    const original_price = extractPrice(
       $("#priceblock_ourprice"),
       $(".a-price.a-text-price span.a-offscreen"),
       $(".basisPrice"),
@@ -57,43 +55,46 @@ export async function scrapeAmazonProduct(url: string) {
       $(".a-size-base.a-color-price")
     );
 
-    const outOfStock = $('#availability span').text().trim().toLowerCase() === 'currently unavailable';
+    const outOfStock =
+      $("#availability span").text().trim().toLowerCase() ===
+      "currently unavailable";
 
-    const images = 
-      $('#imgBlkFront').attr('data-a-dynamic-image') || 
-      $('#landingImage').attr('data-a-dynamic-image') ||
-      '{}'
+    const images =
+      $("#imgBlkFront").attr("data-a-dynamic-image") ||
+      $("#landingImage").attr("data-a-dynamic-image") ||
+      "{}";
 
     const imageUrls = Object.keys(JSON.parse(images));
 
-    const currency = extractCurrency($('.a-price-symbol'))
-    const discountRate = $('.savingsPercentage').text().replace(/[-%]/g, "");
+    const currency = extractCurrency($(".a-price-symbol"));
+    const discountRate = $(".savingsPercentage").text().replace(/[-%]/g, "");
 
     const description = extractDescription($);
-
-        const reviewsCount = $("#acrCustomerReviewText.a-size-base").text().trim();
-
-
+    const reviewsCount = parseInt(
+      $("#acrCustomerReviewText.a-size-base").text().trim(),
+      10
+    );
+    const rating = $("#acrPopover .a-size-base").text().trim();
     // Construct data object with scraped information
     const data = {
       url,
-      currency: currency || '$',
+      currency: currency || "$",
       image: imageUrls[0],
       title,
       currentPrice: Number(currentPrice) || Number(original_price),
       originalPrice: Number(original_price) || Number(currentPrice),
       priceHistory: [],
       discountRate: Number(discountRate),
-      category: 'category',
-      reviewsCount: reviewsCount ,
-      stars: 4.5,
+      category: "category",
+      reviewsCount: reviewsCount,
+      stars: rating || 4.5,
       isOutOfStock: outOfStock,
       description,
       lowestPrice: Number(currentPrice) || Number(original_price),
       highestPrice: Number(original_price) || Number(currentPrice),
       averagePrice: Number(currentPrice) || Number(original_price),
-    }
-    const info = $('#prodDetails.a-section').text().trim();
+    };
+    const info = $("#prodDetails.a-section").text().trim();
 
     // console.log("data", {data});
     // console.log("info", {info});

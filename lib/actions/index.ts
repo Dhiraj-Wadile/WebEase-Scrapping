@@ -60,3 +60,46 @@ export async function getProductById(productId: string) {
   } finally {
   }
 }
+
+export async function getAllProducts() {
+  try {
+    connectToDB();
+    const product = await Product.find();
+    return product;
+  } catch (error: any) {
+    console.log("error", error);
+  }
+}
+
+export async function getSimilarProducts(productId: string) {
+  try {
+    connectToDB();
+    const currentProduct = await Product.findById(productId);
+    if (!currentProduct) return null;
+    const similarProduct = await Product.find({
+      id: { $ne: productId },
+    }).limit(6);
+    return similarProduct;
+  } catch (error: any) {
+    console.log("error", error);
+  }
+}
+
+export async function addUserEmailToProduct(
+  productId: string,
+  userEmail: string
+) {
+  try {
+    //send our 1st email
+    const product = await Product.findById(productId);
+    if (!product) return;
+    const userExists = product.users.some(
+      (user: User) => user.email === userEmail
+    );
+    if (!userExists) {
+      product.users.push({ email: userEmail });
+      await product.save();
+      const emailContent = generateEmailBody(product, "WELCOME");
+    }
+  } catch (error) {}
+}
