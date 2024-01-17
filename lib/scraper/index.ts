@@ -4,7 +4,7 @@
 
 import axios from "axios";
 import * as cheerio from "cheerio";
-import { extractCurrency, extractDescription, extractPrice } from "../utils";
+import { extractCurrency, extractDescription, extractPrice, getHighestPrice, getLowestPrice } from "../utils";
 
 export async function scrapeAmazonProduct(url: string) {
   if (!url) return;
@@ -92,7 +92,7 @@ export async function scrapeAmazonProduct(url: string) {
       description,
       lowestPrice: Number(currentPrice) || Number(original_price),
       highestPrice: Number(original_price) || Number(currentPrice),
-      averagePrice: Number(currentPrice) || Number(original_price),
+      averagePrice: (Number(currentPrice) + Number(original_price))/2,
     };
     const info = $("#prodDetails.a-section").text().trim();
 

@@ -21,6 +21,7 @@
 
 import { PriceHistoryItem, Product } from "@/types";
 
+
 const Notification = {
   WELCOME: 'WELCOME',
   CHANGE_OF_STOCK: 'CHANGE_OF_STOCK',
