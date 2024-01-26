@@ -7,6 +7,8 @@ import { connectToDB } from "../scraper/mongoose";
 import Product from "../models/product.model";
 import { getAveragePrice, getHighestPrice, getLowestPrice } from "../utils";
 import { generateEmailBody, sendEmail } from "../nodemailer";
+import { User } from "@/types";
+
 
 export async function scrapeAndStoreProduct(productUrl: string) {
   if (!productUrl) return;

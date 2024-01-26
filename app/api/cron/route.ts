@@ -28,6 +28,11 @@ export async function GET(request: Request) {
 
         if (!scrapedProduct) return;
 
+        // Ensure stars is a number
+if (typeof scrapedProduct.stars === 'string') {
+  scrapedProduct.stars = parseFloat(scrapedProduct.stars);
+}
+
         const updatedPriceHistory = [
           ...currentProduct.priceHistory,
           {
