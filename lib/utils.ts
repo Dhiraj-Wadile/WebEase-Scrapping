@@ -1,24 +1,3 @@
-// export function extractPrice(...elements: any) {
-//     for (const element of elements) {
-        
-//         // const price = element.find('span[id*="priceblock_ourprice"]');
-//         // if (price.length) {
-//         //     return price.text();
-//         // }
-
-//         const priceText = element.text().trim();
-
-//         if(priceText) return priceText.replace(/[^0-9.]+/g, '');
-
-
-//     }
-// }
- 
-// export function extractCurrency(element: any) {
-//     const currency = element.text().trim().slice(0,1);
-//     return currency ? currency : ' ';
-// }
-
 import { PriceHistoryItem, Product } from "@/types";
 
 

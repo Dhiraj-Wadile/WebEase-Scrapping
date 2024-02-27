@@ -24,11 +24,11 @@ const Home = async () => {
               />
             </p>
             <h1 className="head-text">
-              Unleash the Power of
-              <span className="text-primary"> PriceWise</span>
+            Optimize with the Strength of 
+              <span className="text-primary"> WebEase</span>
             </h1>
             <p className="mt-7">
-              Powerful, self-serve product and growth analytics to help you convert, engage, and retain more.
+            Empowering users with robust self-service analytics for enhanced conversion, engagement, and retention.
             </p>
             <Searchbar />
             {/* <SearchBar></SearchBar> */}

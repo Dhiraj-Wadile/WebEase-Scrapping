@@ -16,7 +16,7 @@ export const connectToDB = async () => {
   }
 
   try {
-    await mongoose.connect(process.env.MONGO_URI);
+    await mongoose.connect("mongodb+srv://dmwadile:dmwadile@amazonproducts.ynww3vn.mongodb.net/?retryWrites=true&w=majority&appName=AmazonProducts");
     isConnected = true;
     console.log("MongoDB already connected");
 
